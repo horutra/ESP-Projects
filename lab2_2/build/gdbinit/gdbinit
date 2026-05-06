@@ -1,0 +1,2 @@
+source /home/artlab121/esp/lab2_2/build/gdbinit/symbols
+source /home/artlab121/esp/lab2_2/build/gdbinit/connect

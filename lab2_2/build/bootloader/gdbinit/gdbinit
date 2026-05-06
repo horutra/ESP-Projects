@@ -1,0 +1,2 @@
+source /home/artlab121/esp/lab2_2/build/bootloader/gdbinit/symbols
+source /home/artlab121/esp/lab2_2/build/bootloader/gdbinit/connect

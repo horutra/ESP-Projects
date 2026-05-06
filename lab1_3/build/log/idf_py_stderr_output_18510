@@ -1,0 +1,24 @@
+Command: cmake -G Ninja -B /home/artlab121/esp/lab1_3/build -DPYTHON_DEPS_CHECKED=1 -DPYTHON=/home/artlab121/.espressif/python_env/idf6.1_py3.12_env/bin/python -DESP_PLATFORM=1 -DCCACHE_ENABLE=False /home/artlab121/esp/lab1_3
+Configuration Report               
+ ───────────────────────────────── 
+   Parser Version: 1               
+   Verbosity: default              
+   Defaults policy: sdkconfig      
+   Status: Finished successfully   
+                                   
+ ───────────────────────────────── 
+CMake Error at /home/artlab121/esp/esp-idf/tools/cmake/component.cmake:494 (add_library):
+  Cannot find source file:
+
+    /home/artlab121/esp/lab1_3/main/blink_example_main.c
+Call Stack (most recent call first):
+  main/CMakeLists.txt:1 (idf_component_register)
+
+
+CMake Error at /home/artlab121/esp/esp-idf/tools/cmake/component.cmake:494 (add_library):
+  No SOURCES given to target: __idf_main
+Call Stack (most recent call first):
+  main/CMakeLists.txt:1 (idf_component_register)
+
+
+CMake Generate step failed.  Build files cannot be regenerated correctly.

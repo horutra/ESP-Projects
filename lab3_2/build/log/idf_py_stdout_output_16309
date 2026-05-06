@@ -1,0 +1,163 @@
+Command: ninja all
+[1/29] Linking C static library esp-idf/esp_security/libesp_security.a
+[2/29] Linking C static library esp-idf/esp_timer/libesp_timer.a
+[3/29] Performing build step for 'bootloader'
+[1/1] cd /home/artlab121/esp/lab3_1/build/bootloader && /home/artlab121/.espressif/python_env/idf6.1_py3.12_env/bin/python /home/artlab121/esp/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x0 /home/artlab121/esp/lab3_1/build/bootloader/bootloader.bin
+Bootloader binary size 0x5250 bytes. 0x2db0 bytes (36%) free.
+[4/29] Linking C static library esp-idf/esp_hal_systimer/libesp_hal_systimer.a
+[5/29] No install step for 'bootloader'
+[6/29] Linking C static library esp-idf/esp_hal_timg/libesp_hal_timg.a
+[7/29] Building CXX object esp-idf/main/CMakeFiles/__idf_main.dir/main.cpp.obj
+FAILED: esp-idf/main/CMakeFiles/__idf_main.dir/main.cpp.obj 
+/home/artlab121/.espressif/tools/riscv32-esp-elf/esp-15.2.0_20251204/riscv32-esp-elf/bin/riscv32-esp-elf-g++ -DESP_PLATFORM -DIDF_VER=\"v6.1-dev-3863-g338f341110\" -DSOC_MMU_PAGE_SIZE=CONFIG_MMU_PAGE_SIZE -DSOC_XTAL_FREQ_MHZ=CONFIG_XTAL_FREQ -D_GLIBCXX_HAVE_POSIX_SEMAPHORE -D_GLIBCXX_USE_POSIX_SEMAPHORE -D_GNU_SOURCE -D_POSIX_READER_WRITER_LOCKS -I/home/artlab121/esp/lab3_1/build/config -I/home/artlab121/esp/lab3_1/main -I/home/artlab121/esp/esp-idf/components/esp_libc/platform_include -I/home/artlab121/esp/esp-idf/components/freertos/config/include -I/home/artlab121/esp/esp-idf/components/freertos/config/include/freertos -I/home/artlab121/esp/esp-idf/components/freertos/config/riscv/include -I/home/artlab121/esp/esp-idf/components/freertos/FreeRTOS-Kernel/include -I/home/artlab121/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/riscv/include -I/home/artlab121/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/riscv/include/freertos -I/home/artlab121/esp/esp-idf/components/freertos/esp_additions/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/include/soc -I/home/artlab121/esp/esp-idf/components/esp_hw_support/ldo/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/debug_probe/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/etm/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/mspi/mspi_timing_tuning/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/mspi/mspi_timing_tuning/tuning_scheme_impl/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/mspi/mspi_intr/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/power_supply/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/modem/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/include/soc/esp32c3 -I/home/artlab121/esp/esp-idf/components/esp_hw_support/port/esp32c3/. -I/home/artlab121/esp/esp-idf/components/esp_hw_support/port/esp32c3/include -I/home/artlab121/esp/esp-idf/components/heap/include -I/home/artlab121/esp/esp-idf/components/heap/tlsf -I/home/artlab121/esp/esp-idf/components/log/include -I/home/artlab121/esp/esp-idf/components/soc/include -I/home/artlab121/esp/esp-idf/components/soc/esp32c3 -I/home/artlab121/esp/esp-idf/components/soc/esp32c3/include -I/home/artlab121/esp/esp-idf/components/soc/esp32c3/register -I/home/artlab121/esp/esp-idf/components/hal/platform_port/include -I/home/artlab121/esp/esp-idf/components/hal/esp32c3/include -I/home/artlab121/esp/esp-idf/components/hal/include -I/home/artlab121/esp/esp-idf/components/esp_rom/include -I/home/artlab121/esp/esp-idf/components/esp_rom/esp32c3/include -I/home/artlab121/esp/esp-idf/components/esp_rom/esp32c3/include/esp32c3 -I/home/artlab121/esp/esp-idf/components/esp_rom/esp32c3 -I/home/artlab121/esp/esp-idf/components/esp_common/include -I/home/artlab121/esp/esp-idf/components/esp_system/include -I/home/artlab121/esp/esp-idf/components/esp_system/port/soc -I/home/artlab121/esp/esp-idf/components/esp_system/port/include/riscv -I/home/artlab121/esp/esp-idf/components/esp_system/port/include/private -I/home/artlab121/esp/esp-idf/components/esp_stdio/include -I/home/artlab121/esp/esp-idf/components/riscv/include -I/home/artlab121/esp/esp-idf/components/esp_hal_gpio/include -I/home/artlab121/esp/esp-idf/components/esp_hal_gpio/esp32c3/include -I/home/artlab121/esp/esp-idf/components/esp_hal_usb/include -I/home/artlab121/esp/esp-idf/components/esp_hal_usb/esp32c3/include -I/home/artlab121/esp/esp-idf/components/esp_hal_pmu/include -I/home/artlab121/esp/esp-idf/components/esp_hal_pmu/esp32c3/include -I/home/artlab121/esp/esp-idf/components/esp_hal_regi2c/include -I/home/artlab121/esp/esp-idf/components/esp_hal_regi2c/esp32c3/include -I/home/artlab121/esp/esp-idf/components/esp_hal_ana_conv/include -I/home/artlab121/esp/esp-idf/components/esp_hal_ana_conv/esp32c3/include -I/home/artlab121/esp/esp-idf/components/esp_hal_dma/include -I/home/artlab121/esp/esp-idf/components/esp_hal_dma/esp32c3/include -I/home/artlab121/esp/esp-idf/components/esp_driver_i2c/include -I/home/artlab121/esp/esp-idf/components/esp_hal_i2c/esp32c3/include -I/home/artlab121/esp/esp-idf/components/esp_hal_i2c/include @"/home/artlab121/esp/lab3_1/build/toolchain/cxxflags" -fdiagnostics-color=always -ffunction-sections -fdata-sections -Wall -Werror -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wno-error=deprecated-declarations -Wextra -Wno-error=extra -Wno-unused-parameter -Wno-sign-compare -Wno-enum-conversion -gdwarf-4 -ggdb -Og -fno-shrink-wrap -fmacro-prefix-map=/home/artlab121/esp/lab3_1=. -fmacro-prefix-map=/home/artlab121/esp/esp-idf=/IDF -fstrict-volatile-bitfields -fno-jump-tables -fno-tree-switch-conversion -std=gnu++26 -fno-exceptions -fuse-cxa-atexit -MD -MT esp-idf/main/CMakeFiles/__idf_main.dir/main.cpp.obj -MF esp-idf/main/CMakeFiles/__idf_main.dir/main.cpp.obj.d -o esp-idf/main/CMakeFiles/__idf_main.dir/main.cpp.obj -c /home/artlab121/esp/lab3_1/main/main.cpp
+/home/artlab121/esp/lab3_1/main/main.cpp: In function 'void app_main()':
+/home/artlab121/esp/lab3_1/main/main.cpp:8:30: error: expected '}' before ';' token
+    8 |         .i2c_port = I2C_NUM_0;
+      |                              ^
+/home/artlab121/esp/lab3_1/main/main.cpp:7:42: note: to match this '{'
+    7 |     i2c_master_bus_config_t bus_config = {
+      |                                          ^
+/home/artlab121/esp/lab3_1/main/main.cpp:8:30: error: missing initializer for member 'i2c_master_bus_config_t::sda_io_num' [-Werror=missing-field-initializers]
+    8 |         .i2c_port = I2C_NUM_0;
+      |                              ^
+/home/artlab121/esp/lab3_1/main/main.cpp:8:30: error: missing initializer for member 'i2c_master_bus_config_t::scl_io_num' [-Werror=missing-field-initializers]
+/home/artlab121/esp/lab3_1/main/main.cpp:8:30: error: missing initializer for member 'i2c_master_bus_config_t::<anonymous>' [-Werror=missing-field-initializers]
+/home/artlab121/esp/lab3_1/main/main.cpp:8:30: error: missing initializer for member 'i2c_master_bus_config_t::glitch_ignore_cnt' [-Werror=missing-field-initializers]
+/home/artlab121/esp/lab3_1/main/main.cpp:8:30: error: missing initializer for member 'i2c_master_bus_config_t::intr_priority' [-Werror=missing-field-initializers]
+/home/artlab121/esp/lab3_1/main/main.cpp:8:30: error: missing initializer for member 'i2c_master_bus_config_t::trans_queue_depth' [-Werror=missing-field-initializers]
+/home/artlab121/esp/lab3_1/main/main.cpp:8:30: error: missing initializer for member 'i2c_master_bus_config_t::flags' [-Werror=missing-field-initializers]
+/home/artlab121/esp/lab3_1/main/main.cpp:9:9: error: expected primary-expression before '.' token
+    9 |         .sda_io_num = GPIO_NUM_10; // Adjust to your SDA pin
+      |         ^
+/home/artlab121/esp/lab3_1/main/main.cpp:10:9: error: expected primary-expression before '.' token
+   10 |         .scl_io_num = GPIO_NUM_8;  // Adjust to your SCL pin
+      |         ^
+/home/artlab121/esp/lab3_1/main/main.cpp:11:9: error: expected primary-expression before '.' token
+   11 |         .clk_source = I2C_CLK_SRC_DEFAULT;
+      |         ^
+/home/artlab121/esp/lab3_1/main/main.cpp:12:9: error: expected primary-expression before '.' token
+   12 |         .glitch_ignore_cnt = 7;
+      |         ^
+/home/artlab121/esp/lab3_1/main/main.cpp:13:9: error: expected primary-expression before '.' token
+   13 |         .intr_priority = 0;
+      |         ^
+/home/artlab121/esp/lab3_1/main/main.cpp:14:9: error: 'trans_queue_depth' was not declared in this scope
+   14 |         trans_queue_depth = 0;
+      |         ^~~~~~~~~~~~~~~~~
+/home/artlab121/esp/lab3_1/main/main.cpp:7:29: warning: unused variable 'bus_config' [-Wunused-variable]
+    7 |     i2c_master_bus_config_t bus_config = {
+      |                             ^~~~~~~~~~
+In file included from /home/artlab121/esp/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:12,
+                 from /home/artlab121/esp/esp-idf/components/esp_hw_support/include/esp_cpu.h:21,
+                 from /home/artlab121/esp/esp-idf/components/esp_hw_support/include/spinlock.h:11,
+                 from /home/artlab121/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/riscv/include/freertos/portmacro.h:68,
+                 from /home/artlab121/esp/esp-idf/components/freertos/FreeRTOS-Kernel/include/freertos/portable.h:57,
+                 from /home/artlab121/esp/esp-idf/components/freertos/FreeRTOS-Kernel/include/freertos/FreeRTOS.h:69,
+                 from /home/artlab121/esp/lab3_1/main/main.cpp:1:
+/home/artlab121/esp/lab3_1/main/main.cpp: At global scope:
+/home/artlab121/esp/esp-idf/components/esp_common/include/esp_err.h:115:28: error: expected unqualified-id before 'do'
+  115 | #define ESP_ERROR_CHECK(x) do {                                         \
+      |                            ^~
+/home/artlab121/esp/lab3_1/main/main.cpp:17:5: note: in expansion of macro 'ESP_ERROR_CHECK'
+   17 |     ESP_ERROR_CHECK(i2c_new_master_bus(&bus_config, &bus_handle));
+      |     ^~~~~~~~~~~~~~~
+/home/artlab121/esp/esp-idf/components/esp_common/include/esp_err.h:121:7: error: expected unqualified-id before 'while'
+  121 |     } while(0)
+      |       ^~~~~
+/home/artlab121/esp/lab3_1/main/main.cpp:17:5: note: in expansion of macro 'ESP_ERROR_CHECK'
+   17 |     ESP_ERROR_CHECK(i2c_new_master_bus(&bus_config, &bus_handle));
+      |     ^~~~~~~~~~~~~~~
+/home/artlab121/esp/lab3_1/main/main.cpp:21:47: error: expected '}' before ';' token
+   21 |          .dev_addr_length = I2C_ADDR_BIT_LEN_7;
+      |                                               ^
+/home/artlab121/esp/lab3_1/main/main.cpp:20:35: note: to match this '{'
+   20 |     i2c_device_config_t lcd_cfg = {
+      |                                   ^
+/home/artlab121/esp/lab3_1/main/main.cpp:21:47: error: missing initializer for member 'i2c_device_config_t::device_address' [-Werror=missing-field-initializers]
+   21 |          .dev_addr_length = I2C_ADDR_BIT_LEN_7;
+      |                                               ^
+/home/artlab121/esp/lab3_1/main/main.cpp:21:47: error: missing initializer for member 'i2c_device_config_t::scl_speed_hz' [-Werror=missing-field-initializers]
+/home/artlab121/esp/lab3_1/main/main.cpp:21:47: error: missing initializer for member 'i2c_device_config_t::scl_wait_us' [-Werror=missing-field-initializers]
+/home/artlab121/esp/lab3_1/main/main.cpp:21:47: error: missing initializer for member 'i2c_device_config_t::flags' [-Werror=missing-field-initializers]
+/home/artlab121/esp/lab3_1/main/main.cpp:22:10: error: expected unqualified-id before '.' token
+   22 |          .device_address = 0x3E;
+      |          ^
+/home/artlab121/esp/lab3_1/main/main.cpp:23:10: error: expected unqualified-id before '.' token
+   23 |          .scl_speed_hz = 100000;
+      |          ^
+/home/artlab121/esp/lab3_1/main/main.cpp:24:10: error: expected unqualified-id before '.' token
+   24 |          .scl_wait_us = 0;
+      |          ^
+/home/artlab121/esp/lab3_1/main/main.cpp:25:10: error: expected unqualified-id before '.' token
+   25 |          .flags = {0};
+      |          ^
+/home/artlab121/esp/lab3_1/main/main.cpp:26:5: error: expected declaration before '}' token
+   26 |     }
+      |     ^
+/home/artlab121/esp/esp-idf/components/esp_common/include/esp_err.h:115:28: error: expected unqualified-id before 'do'
+  115 | #define ESP_ERROR_CHECK(x) do {                                         \
+      |                            ^~
+/home/artlab121/esp/lab3_1/main/main.cpp:28:5: note: in expansion of macro 'ESP_ERROR_CHECK'
+   28 |     ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &lcd_cfg, &lcd_handle));
+      |     ^~~~~~~~~~~~~~~
+/home/artlab121/esp/esp-idf/components/esp_common/include/esp_err.h:121:7: error: expected unqualified-id before 'while'
+  121 |     } while(0)
+      |       ^~~~~
+/home/artlab121/esp/lab3_1/main/main.cpp:28:5: note: in expansion of macro 'ESP_ERROR_CHECK'
+   28 |     ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &lcd_cfg, &lcd_handle));
+      |     ^~~~~~~~~~~~~~~
+/home/artlab121/esp/lab3_1/main/main.cpp:32:52: error: expected '}' before ';' token
+   32 |               .dev_addr_length = I2C_ADDR_BIT_LEN_7;
+      |                                                    ^
+/home/artlab121/esp/lab3_1/main/main.cpp:31:35: note: to match this '{'
+   31 |     i2c_device_config_t rgb_cfg = {
+      |                                   ^
+/home/artlab121/esp/lab3_1/main/main.cpp:32:52: error: missing initializer for member 'i2c_device_config_t::device_address' [-Werror=missing-field-initializers]
+   32 |               .dev_addr_length = I2C_ADDR_BIT_LEN_7;
+      |                                                    ^
+/home/artlab121/esp/lab3_1/main/main.cpp:32:52: error: missing initializer for member 'i2c_device_config_t::scl_speed_hz' [-Werror=missing-field-initializers]
+/home/artlab121/esp/lab3_1/main/main.cpp:32:52: error: missing initializer for member 'i2c_device_config_t::scl_wait_us' [-Werror=missing-field-initializers]
+/home/artlab121/esp/lab3_1/main/main.cpp:32:52: error: missing initializer for member 'i2c_device_config_t::flags' [-Werror=missing-field-initializers]
+/home/artlab121/esp/lab3_1/main/main.cpp:33:15: error: expected unqualified-id before '.' token
+   33 |               .device_address = 0x60;
+      |               ^
+/home/artlab121/esp/lab3_1/main/main.cpp:34:15: error: expected unqualified-id before '.' token
+   34 |               .scl_speed_hz = 100000;
+      |               ^
+/home/artlab121/esp/lab3_1/main/main.cpp:35:15: error: expected unqualified-id before '.' token
+   35 |               .scl_wait_us = 0;
+      |               ^
+/home/artlab121/esp/lab3_1/main/main.cpp:36:15: error: expected unqualified-id before '.' token
+   36 |               .flags = {0};
+      |               ^
+/home/artlab121/esp/lab3_1/main/main.cpp:37:5: error: expected declaration before '}' token
+   37 |     }
+      |     ^
+/home/artlab121/esp/esp-idf/components/esp_common/include/esp_err.h:115:28: error: expected unqualified-id before 'do'
+  115 | #define ESP_ERROR_CHECK(x) do {                                         \
+      |                            ^~
+/home/artlab121/esp/lab3_1/main/main.cpp:39:5: note: in expansion of macro 'ESP_ERROR_CHECK'
+   39 |     ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &rgb_cfg, &rgb_handle));
+      |     ^~~~~~~~~~~~~~~
+/home/artlab121/esp/esp-idf/components/esp_common/include/esp_err.h:121:7: error: expected unqualified-id before 'while'
+  121 |     } while(0)
+      |       ^~~~~
+/home/artlab121/esp/lab3_1/main/main.cpp:39:5: note: in expansion of macro 'ESP_ERROR_CHECK'
+   39 |     ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &rgb_cfg, &rgb_handle));
+      |     ^~~~~~~~~~~~~~~
+/home/artlab121/esp/lab3_1/main/main.cpp:42:5: error: 'lcd' does not name a type
+   42 |     lcd.init(lcd_handle, rgb_handle);
+      |     ^~~
+/home/artlab121/esp/lab3_1/main/main.cpp:43:5: error: 'lcd' does not name a type
+   43 |     lcd.setRGB(rgb_handle, 0, 255, 0); // Green backlight
+      |     ^~~
+/home/artlab121/esp/lab3_1/main/main.cpp:45:5: error: expected unqualified-id before 'while'
+   45 |     while (1) {
+      |     ^~~~~
+/home/artlab121/esp/lab3_1/main/main.cpp:54:1: error: expected declaration before '}' token
+   54 | }
+      | ^
+cc1plus: all warnings being treated as errors
+[8/29] Completed 'bootloader'
+[9/29] Linking C static library esp-idf/efuse/libefuse.a
+ninja: build stopped: subcommand failed.

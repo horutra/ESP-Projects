@@ -1,0 +1,56 @@
+Command: ninja all
+[1/18] Linking C static library esp-idf/esp_hal_clock/libesp_hal_clock.a
+[2/18] Linking C static library esp-idf/esp_hal_gpspi/libesp_hal_gpspi.a
+[3/18] Performing build step for 'bootloader'
+[1/1] cd /home/artlab121/esp/lab3_1/build/bootloader && /home/artlab121/.espressif/python_env/idf6.1_py3.12_env/bin/python /home/artlab121/esp/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x0 /home/artlab121/esp/lab3_1/build/bootloader/bootloader.bin
+Bootloader binary size 0x5250 bytes. 0x2db0 bytes (36%) free.
+[4/18] Linking C static library esp-idf/esp_hal_dma/libesp_hal_dma.a
+[5/18] No install step for 'bootloader'
+[6/18] Building CXX object esp-idf/main/CMakeFiles/__idf_main.dir/main.cpp.obj
+FAILED: esp-idf/main/CMakeFiles/__idf_main.dir/main.cpp.obj 
+/home/artlab121/.espressif/tools/riscv32-esp-elf/esp-15.2.0_20251204/riscv32-esp-elf/bin/riscv32-esp-elf-g++ -DESP_PLATFORM -DIDF_VER=\"v6.1-dev-3863-g338f341110\" -DSOC_MMU_PAGE_SIZE=CONFIG_MMU_PAGE_SIZE -DSOC_XTAL_FREQ_MHZ=CONFIG_XTAL_FREQ -D_GLIBCXX_HAVE_POSIX_SEMAPHORE -D_GLIBCXX_USE_POSIX_SEMAPHORE -D_GNU_SOURCE -D_POSIX_READER_WRITER_LOCKS -I/home/artlab121/esp/lab3_1/build/config -I/home/artlab121/esp/lab3_1/main -I/home/artlab121/esp/esp-idf/components/esp_libc/platform_include -I/home/artlab121/esp/esp-idf/components/freertos/config/include -I/home/artlab121/esp/esp-idf/components/freertos/config/include/freertos -I/home/artlab121/esp/esp-idf/components/freertos/config/riscv/include -I/home/artlab121/esp/esp-idf/components/freertos/FreeRTOS-Kernel/include -I/home/artlab121/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/riscv/include -I/home/artlab121/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/riscv/include/freertos -I/home/artlab121/esp/esp-idf/components/freertos/esp_additions/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/include/soc -I/home/artlab121/esp/esp-idf/components/esp_hw_support/ldo/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/debug_probe/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/etm/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/mspi/mspi_timing_tuning/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/mspi/mspi_timing_tuning/tuning_scheme_impl/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/mspi/mspi_intr/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/power_supply/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/modem/include -I/home/artlab121/esp/esp-idf/components/esp_hw_support/include/soc/esp32c3 -I/home/artlab121/esp/esp-idf/components/esp_hw_support/port/esp32c3/. -I/home/artlab121/esp/esp-idf/components/esp_hw_support/port/esp32c3/include -I/home/artlab121/esp/esp-idf/components/heap/include -I/home/artlab121/esp/esp-idf/components/heap/tlsf -I/home/artlab121/esp/esp-idf/components/log/include -I/home/artlab121/esp/esp-idf/components/soc/include -I/home/artlab121/esp/esp-idf/components/soc/esp32c3 -I/home/artlab121/esp/esp-idf/components/soc/esp32c3/include -I/home/artlab121/esp/esp-idf/components/soc/esp32c3/register -I/home/artlab121/esp/esp-idf/components/hal/platform_port/include -I/home/artlab121/esp/esp-idf/components/hal/esp32c3/include -I/home/artlab121/esp/esp-idf/components/hal/include -I/home/artlab121/esp/esp-idf/components/esp_rom/include -I/home/artlab121/esp/esp-idf/components/esp_rom/esp32c3/include -I/home/artlab121/esp/esp-idf/components/esp_rom/esp32c3/include/esp32c3 -I/home/artlab121/esp/esp-idf/components/esp_rom/esp32c3 -I/home/artlab121/esp/esp-idf/components/esp_common/include -I/home/artlab121/esp/esp-idf/components/esp_system/include -I/home/artlab121/esp/esp-idf/components/esp_system/port/soc -I/home/artlab121/esp/esp-idf/components/esp_system/port/include/riscv -I/home/artlab121/esp/esp-idf/components/esp_system/port/include/private -I/home/artlab121/esp/esp-idf/components/esp_stdio/include -I/home/artlab121/esp/esp-idf/components/riscv/include -I/home/artlab121/esp/esp-idf/components/esp_hal_gpio/include -I/home/artlab121/esp/esp-idf/components/esp_hal_gpio/esp32c3/include -I/home/artlab121/esp/esp-idf/components/esp_hal_usb/include -I/home/artlab121/esp/esp-idf/components/esp_hal_usb/esp32c3/include -I/home/artlab121/esp/esp-idf/components/esp_hal_pmu/include -I/home/artlab121/esp/esp-idf/components/esp_hal_pmu/esp32c3/include -I/home/artlab121/esp/esp-idf/components/esp_hal_regi2c/include -I/home/artlab121/esp/esp-idf/components/esp_hal_regi2c/esp32c3/include -I/home/artlab121/esp/esp-idf/components/esp_hal_ana_conv/include -I/home/artlab121/esp/esp-idf/components/esp_hal_ana_conv/esp32c3/include -I/home/artlab121/esp/esp-idf/components/esp_hal_dma/include -I/home/artlab121/esp/esp-idf/components/esp_hal_dma/esp32c3/include -I/home/artlab121/esp/esp-idf/components/esp_driver_i2c/include -I/home/artlab121/esp/esp-idf/components/esp_hal_i2c/esp32c3/include -I/home/artlab121/esp/esp-idf/components/esp_hal_i2c/include @"/home/artlab121/esp/lab3_1/build/toolchain/cxxflags" -fdiagnostics-color=always -ffunction-sections -fdata-sections -Wall -Werror -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wno-error=deprecated-declarations -Wextra -Wno-error=extra -Wno-unused-parameter -Wno-sign-compare -Wno-enum-conversion -gdwarf-4 -ggdb -Og -fno-shrink-wrap -fmacro-prefix-map=/home/artlab121/esp/lab3_1=. -fmacro-prefix-map=/home/artlab121/esp/esp-idf=/IDF -fstrict-volatile-bitfields -fno-jump-tables -fno-tree-switch-conversion -std=gnu++26 -fno-exceptions -fuse-cxa-atexit -MD -MT esp-idf/main/CMakeFiles/__idf_main.dir/main.cpp.obj -MF esp-idf/main/CMakeFiles/__idf_main.dir/main.cpp.obj.d -o esp-idf/main/CMakeFiles/__idf_main.dir/main.cpp.obj -c /home/artlab121/esp/lab3_1/main/main.cpp
+/home/artlab121/esp/lab3_1/main/main.cpp: In function 'void app_main()':
+/home/artlab121/esp/lab3_1/main/main.cpp:17:9: error: either all initializer clauses should be designated or none of them should be
+   17 |         trans_queue_depth = 0,
+      |         ^~~~~~~~~~~~~~~~~
+/home/artlab121/esp/lab3_1/main/main.cpp:17:9: error: 'trans_queue_depth' was not declared in this scope
+In file included from /home/artlab121/esp/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:12,
+                 from /home/artlab121/esp/esp-idf/components/esp_hw_support/include/esp_cpu.h:21,
+                 from /home/artlab121/esp/esp-idf/components/esp_hw_support/include/spinlock.h:11,
+                 from /home/artlab121/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/riscv/include/freertos/portmacro.h:68,
+                 from /home/artlab121/esp/esp-idf/components/freertos/FreeRTOS-Kernel/include/freertos/portable.h:57,
+                 from /home/artlab121/esp/esp-idf/components/freertos/FreeRTOS-Kernel/include/freertos/FreeRTOS.h:69,
+                 from /home/artlab121/esp/lab3_1/main/main.cpp:1:
+/home/artlab121/esp/esp-idf/components/esp_common/include/esp_err.h:115:28: error: expected ',' or ';' before 'do'
+  115 | #define ESP_ERROR_CHECK(x) do {                                         \
+      |                            ^~
+/home/artlab121/esp/lab3_1/main/main.cpp:21:5: note: in expansion of macro 'ESP_ERROR_CHECK'
+   21 |     ESP_ERROR_CHECK(i2c_new_master_bus(&bus_config, &bus_handle));
+      |     ^~~~~~~~~~~~~~~
+/home/artlab121/esp/esp-idf/components/esp_common/include/esp_err.h:115:28: error: expected ',' or ';' before 'do'
+  115 | #define ESP_ERROR_CHECK(x) do {                                         \
+      |                            ^~
+/home/artlab121/esp/lab3_1/main/main.cpp:32:5: note: in expansion of macro 'ESP_ERROR_CHECK'
+   32 |     ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &lcd_cfg, &lcd_handle));
+      |     ^~~~~~~~~~~~~~~
+/home/artlab121/esp/esp-idf/components/esp_common/include/esp_err.h:115:28: error: expected ',' or ';' before 'do'
+  115 | #define ESP_ERROR_CHECK(x) do {                                         \
+      |                            ^~
+/home/artlab121/esp/lab3_1/main/main.cpp:43:5: note: in expansion of macro 'ESP_ERROR_CHECK'
+   43 |     ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &rgb_cfg, &rgb_handle));
+      |     ^~~~~~~~~~~~~~~
+/home/artlab121/esp/lab3_1/main/main.cpp:7:33: warning: unused variable 'bus_handle' [-Wunused-variable]
+    7 |         i2c_master_bus_handle_t bus_handle;
+      |                                 ^~~~~~~~~~
+/home/artlab121/esp/lab3_1/main/main.cpp:10:29: warning: unused variable 'bus_config' [-Wunused-variable]
+   10 |     i2c_master_bus_config_t bus_config = {
+      |                             ^~~~~~~~~~
+/home/artlab121/esp/lab3_1/main/main.cpp:24:25: warning: unused variable 'lcd_cfg' [-Wunused-variable]
+   24 |     i2c_device_config_t lcd_cfg = {
+      |                         ^~~~~~~
+/home/artlab121/esp/lab3_1/main/main.cpp:35:25: warning: unused variable 'rgb_cfg' [-Wunused-variable]
+   35 |     i2c_device_config_t rgb_cfg = {
+      |                         ^~~~~~~
+[7/18] Linking C static library esp-idf/esp_stdio/libesp_stdio.a
+[8/18] Completed 'bootloader'
+ninja: build stopped: subcommand failed.

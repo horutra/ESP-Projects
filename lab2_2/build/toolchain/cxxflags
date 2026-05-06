@@ -1,0 +1,4 @@
+-march=rv32imc_zicsr_zifencei
+-mtune=esp-base
+"-specs=/home/artlab121/esp/lab2_2/build/specs/picolibc.specs"
+-fno-rtti
