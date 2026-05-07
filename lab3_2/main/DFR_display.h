@@ -14,11 +14,11 @@
 class DFR_display {
 	public: 
 		DFR_display(uint8_t rgbADD, uint8_t col, uint8_t row); 
-
 		void init(); 
 		void setCursor(uint8_t col, uint8_t row);
 		void printstr(const char* str); 
 		void dispRGB(uint8_t r, uint8_t g, uint8_t b); 
+		i2c_master_bus_handle_t getBus() { return _bus; }
 
 	private: 
 		uint8_t _dispADD; 

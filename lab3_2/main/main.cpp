@@ -3,6 +3,7 @@
 #include <math.h>
 #include <string.h>
 #include "esp_log.h"
+#include <string.h>
 
 #define SHTC3_ADD 0x70
 #define SHTC3_SLEEP 0xB098 
@@ -30,12 +31,12 @@ extern "C" void app_main(void){
 	i2c_device_config_t sensorConf = {};
 	sensorConf.dev_addr_length = I2C_ADDR_BIT_LEN_7;
 	sensorConf.device_address = SHTC3_ADD;
-	sensorCond.scl_speed_hz = 100000; 
+	sensorConf.scl_speed_hz = 100000; 
 	i2c_master_bus_add_device(lcd.getBus(), &sensorConf, &sensorDev);
 	while (true) {
         // Wake up sensor
-        cmd[0] = (uint8_t)(SHTC3_WAKEUP >> 8);
-        cmd[1] = (uint8_t)(SHTC3_WAKEUP & 0xFF);
+        cmd[0] = (uint8_t)(SHTC3_WAKE >> 8);
+        cmd[1] = (uint8_t)(SHTC3_WAKE & 0xFF);
         i2c_master_transmit(sensorDev, cmd, 2, SHTC3_TIMEOUT_MS);
         vTaskDelay(pdMS_TO_TICKS(200));
 
