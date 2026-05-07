@@ -33,7 +33,11 @@ extern "C" void app_main(void){
 	sensorConf.device_address = SHTC3_ADD;
 	sensorConf.scl_speed_hz = 100000; 
 	i2c_master_bus_add_device(lcd.getBus(), &sensorConf, &sensorDev);
-	while (true) {
+
+    uint8_t cmd[2];        // add this
+    uint8_t data[6];
+	
+    while (true) {
         // Wake up sensor
         cmd[0] = (uint8_t)(SHTC3_WAKE >> 8);
         cmd[1] = (uint8_t)(SHTC3_WAKE & 0xFF);
