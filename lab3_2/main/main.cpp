@@ -25,7 +25,7 @@ static uint8_t crc8(const uint8_t *data, size_t len) {
 extern "C" void app_main(void){ 
 	DFR_display lcd(0x2D, 16, 2); 
 	lcd.init();
-	lcd.dispRGB(191,0,240);
+	lcd.dispRGB(255,0,0);
 
 	i2c_master_dev_handle_t sensorDev; 
 	i2c_device_config_t sensorConf = {};
