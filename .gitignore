@@ -1,0 +1,10 @@
+# Ignore the framework itself
+esp-idf/
+
+# Ignore build artifacts (very important!)
+build/
+sdkconfig
+sdkconfig.old
+
+# Ignore local VS Code settings
+.vscode/
