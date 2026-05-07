@@ -68,13 +68,13 @@ extern "C" void app_main(void){
         float temp   = -45.0f + 175.0f * (temp_raw / 65535.0f);
         float humid  = 100.0f * (hum_raw  / 65535.0f);
 
-        int tc = (int)roundf(temp);
+        int tf = (int)roundf(temp * 9.0f/ 5.0f + 32.0f);
         int rh = (int)roundf(humid);
 
         // Format strings
         char line1[17];
         char line2[17];
-        snprintf(line1, sizeof(line1), "Temp: %dC       ", tc);
+        snprintf(line1, sizeof(line1), "Temp: %dF       ", tf);
         snprintf(line2, sizeof(line2), "Hum : %d%%       ", rh);
 
         // Update display
