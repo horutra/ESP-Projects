@@ -2,34 +2,34 @@
 	"sources" : 
 	[
 		{
-			"file" : "/home/artlab121/esp/lab2_2/build/CMakeFiles/bootloader"
+			"file" : "/Users/horutra/esp/CSE121/lab2_2/build/CMakeFiles/bootloader"
 		},
 		{
-			"file" : "/home/artlab121/esp/lab2_2/build/CMakeFiles/bootloader.rule"
+			"file" : "/Users/horutra/esp/CSE121/lab2_2/build/CMakeFiles/bootloader.rule"
 		},
 		{
-			"file" : "/home/artlab121/esp/lab2_2/build/CMakeFiles/bootloader-complete.rule"
+			"file" : "/Users/horutra/esp/CSE121/lab2_2/build/CMakeFiles/bootloader-complete.rule"
 		},
 		{
-			"file" : "/home/artlab121/esp/lab2_2/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
+			"file" : "/Users/horutra/esp/CSE121/lab2_2/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
 		},
 		{
-			"file" : "/home/artlab121/esp/lab2_2/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
+			"file" : "/Users/horutra/esp/CSE121/lab2_2/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
 		},
 		{
-			"file" : "/home/artlab121/esp/lab2_2/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
+			"file" : "/Users/horutra/esp/CSE121/lab2_2/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
 		},
 		{
-			"file" : "/home/artlab121/esp/lab2_2/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
+			"file" : "/Users/horutra/esp/CSE121/lab2_2/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
 		},
 		{
-			"file" : "/home/artlab121/esp/lab2_2/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
+			"file" : "/Users/horutra/esp/CSE121/lab2_2/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
 		},
 		{
-			"file" : "/home/artlab121/esp/lab2_2/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
+			"file" : "/Users/horutra/esp/CSE121/lab2_2/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
 		},
 		{
-			"file" : "/home/artlab121/esp/lab2_2/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
+			"file" : "/Users/horutra/esp/CSE121/lab2_2/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
 		}
 	],
 	"target" : 

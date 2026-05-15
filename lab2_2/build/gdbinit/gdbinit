@@ -1,2 +1,2 @@
-source /home/artlab121/esp/lab2_2/build/gdbinit/symbols
-source /home/artlab121/esp/lab2_2/build/gdbinit/connect
+source /Users/horutra/esp/CSE121/lab2_2/build/gdbinit/symbols
+source /Users/horutra/esp/CSE121/lab2_2/build/gdbinit/connect
