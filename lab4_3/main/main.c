@@ -29,6 +29,7 @@
 #include "driver/gpio.h"
 #include "driver/i2c_master.h"
 #define THRESHOLD 100
+#define STILL_TIME_MS 2000
 
 /**
  * Brief:
@@ -50,7 +51,8 @@
  */
 
 #define HID_DEMO_TAG "HID_DEMO"
-
+static int still_counter = 0;
+static bool clicked = false;
 
 static uint16_t hid_conn_id = 0;
 static bool sec_conn = false;
@@ -243,34 +245,81 @@ void hid_demo_task(void *pvParameters)
             int x_delta = 0;
             int y_delta = 0;
 
+
             // LEFT / RIGHT
             if (X_ACCEL > THRESHOLD) {
 
-                x_delta = 4;
+                x_delta = -4;
 
             }
             else if (X_ACCEL < -THRESHOLD) {
 
-                x_delta = -4;
+                x_delta = 4;
             }
 
             // UP / DOWN
             if (Y_ACCEL > THRESHOLD) {
 
-                y_delta = -4;
+                y_delta = 4;
 
             }
             else if (Y_ACCEL < -THRESHOLD) {
 
-                y_delta = 4;
+                y_delta = -4;
             }
+            
+                if (abs(X_ACCEL)<500 && abs(Y_ACCEL)<500) {
 
+                    still_counter += 50;
+
+                    // 2 seconds passed
+                    if (still_counter >= STILL_TIME_MS && !clicked) {
+
+                        ESP_LOGI(HID_DEMO_TAG, "Mouse Click!");
+
+                        // LEFT CLICK PRESS
+                                                            // PRESS LEFT BUTTON
+                                    esp_hidd_send_mouse_value(
+                                        hid_conn_id,
+                                        1,
+                                        1,
+                                        0
+                                    );
+
+                                    ESP_LOGI(HID_DEMO_TAG, "Mouse button DOWN");
+
+                                    vTaskDelay(150 / portTICK_PERIOD_MS);
+
+                                    // RELEASE LEFT BUTTON
+                                    esp_hidd_send_mouse_value(
+                                        hid_conn_id,
+                                        0,
+                                        0,
+                                        0
+                                    );
+
+                                    ESP_LOGI(HID_DEMO_TAG, "Mouse button UP");
+
+                                    vTaskDelay(150 / portTICK_PERIOD_MS);
+
+                        clicked = true;
+                        vTaskDelay(500 / portTICK_PERIOD_MS);
+                    }
+
+                        } else {
+
+                            // Reset timer if movement detected
+                            still_counter = 0;
+                            clicked = false;
+                        }     
+            if(!clicked) {           
             esp_hidd_send_mouse_value(
                 hid_conn_id,
                 0,
                 x_delta,
                 y_delta
             );
+                    }
 
             ESP_LOGI(
                 HID_DEMO_TAG,
@@ -280,6 +329,8 @@ void hid_demo_task(void *pvParameters)
                 x_delta,
                 y_delta
             );
+
+
         }
     }
 }
