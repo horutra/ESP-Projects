@@ -13,55 +13,32 @@
 #include "esp_timer.h"
 
 #include "driver/gpio.h"
-#include "driver/temperature_sensor.h"
+
 
 #include "rom/ets_sys.h"
+#include "driver/i2c_master.h"
+
+#define I2C_MASTER_SCL_IO       8
+#define I2C_MASTER_SDA_IO       7
+#define I2C_MASTER_NUM          I2C_NUM_0
+#define I2C_MASTER_TIMEOUT_MS   1000
+
+#define SHTC3_SENSOR_ADDR       0x70
+#define SHTC3_Power_Up_Mode     0x3517
+#define SHTC3_measurement       0x7CA2
+
 
 static const char *TAG = "Ultrasonic";
 
 /* GPIO PINS */
-#define TRIG_PIN GPIO_NUM_8
-#define ECHO_PIN GPIO_NUM_7
+#define TRIG_PIN GPIO_NUM_4
+#define ECHO_PIN GPIO_NUM_3
 
 /*
  * Speed of sound:
  * v = 331.3 + (0.606 * tempC)
  */
 #define SPEED_SOUND(TempC) (331.3f + (0.606f * TempC))
-
-temperature_sensor_handle_t temp_handle = NULL;
-
-static void temperature_sensor_init(void)
-{
-    temperature_sensor_config_t temp_config =
-        TEMPERATURE_SENSOR_CONFIG_DEFAULT(-10, 80);
-
-    ESP_ERROR_CHECK(
-        temperature_sensor_install(
-            &temp_config,
-            &temp_handle
-        )
-    );
-
-    ESP_ERROR_CHECK(
-        temperature_sensor_enable(temp_handle)
-    );
-}
-
-static float read_temperature_c(void)
-{
-    float temperature_c = 0;
-
-    ESP_ERROR_CHECK(
-        temperature_sensor_get_celsius(
-            temp_handle,
-            &temperature_c
-        )
-    );
-
-    return temperature_c;
-}
-
 
 static void ultrasonic_gpio_init(void)
 {
@@ -84,6 +61,7 @@ static void ultrasonic_gpio_init(void)
 
 static void ultrasonic_trigger(void)
 {
+   
     gpio_set_level(TRIG_PIN, 0);
     ets_delay_us(2);
 
@@ -154,11 +132,134 @@ static float calculate_distance_cm(
     return distance_cm;
 }
 
+
+static uint8_t crc8(const uint8_t *data, size_t len)
+{
+    uint8_t crc = 0xFF;
+
+    for (size_t i = 0; i < len; i++) {
+
+        crc ^= data[i];
+
+        for (int bit = 0; bit < 8; bit++) {
+
+            crc =
+                (crc & 0x80)
+                ? ((crc << 1) ^ 0x31)
+                : (crc << 1);
+        }
+    }
+
+    return crc;
+}
+
+static void shtc3_init(
+    i2c_master_bus_handle_t *bus_handle,
+    i2c_master_dev_handle_t *dev_handle
+)
+{
+    i2c_master_bus_config_t bus_config = {
+        .i2c_port = I2C_MASTER_NUM,
+        .sda_io_num = I2C_MASTER_SDA_IO,
+        .scl_io_num = I2C_MASTER_SCL_IO,
+        .clk_source = I2C_CLK_SRC_DEFAULT,
+        .glitch_ignore_cnt = 7,
+        .flags.enable_internal_pullup = true,
+    };
+
+    ESP_ERROR_CHECK(
+        i2c_new_master_bus(
+            &bus_config,
+            bus_handle
+        )
+    );
+
+    i2c_device_config_t dev_config = {
+        .dev_addr_length = I2C_ADDR_BIT_LEN_7,
+        .device_address = SHTC3_SENSOR_ADDR,
+        .scl_speed_hz = 100000,
+    };
+
+    ESP_ERROR_CHECK(
+        i2c_master_bus_add_device(
+            *bus_handle,
+            &dev_config,
+            dev_handle
+        )
+    );
+}
+
+static float read_temperature_c(
+    i2c_master_dev_handle_t dev_handle
+)
+{
+    uint8_t data[6];
+
+    uint8_t cmd[2] = {
+        (uint8_t)(SHTC3_measurement >> 8),
+        (uint8_t)(SHTC3_measurement & 0xFF)
+    };
+
+    uint8_t wakeup[2] = {
+        (uint8_t)(SHTC3_Power_Up_Mode >> 8),
+        (uint8_t)(SHTC3_Power_Up_Mode & 0xFF)
+    };
+
+    i2c_master_transmit(
+        dev_handle,
+        wakeup,
+        2,
+        I2C_MASTER_TIMEOUT_MS
+    );
+
+    vTaskDelay(pdMS_TO_TICKS(100));
+
+    i2c_master_transmit(
+        dev_handle,
+        cmd,
+        2,
+        I2C_MASTER_TIMEOUT_MS
+    );
+
+    vTaskDelay(pdMS_TO_TICKS(20));
+
+    i2c_master_receive(
+        dev_handle,
+        data,
+        6,
+        I2C_MASTER_TIMEOUT_MS
+    );
+
+    if (crc8(data, 2) != data[2]) {
+
+        ESP_LOGE(TAG, "Temperature CRC mismatch");
+
+        return 25.0f;
+    }
+
+    int temp_raw =
+        (data[0] << 8) | data[1];
+
+    float temp =
+        -45.0f +
+        175.0f *
+        (temp_raw / 65535.0f);
+
+    return temp;
+}
+
+
 void app_main(void)
 {
     ultrasonic_gpio_init();
 
-    temperature_sensor_init();
+    i2c_master_bus_handle_t bus_handle;
+    i2c_master_dev_handle_t dev_handle;
+
+    shtc3_init(
+        &bus_handle,
+        &dev_handle
+    );
 
     while (1) {
 
@@ -177,7 +278,7 @@ void app_main(void)
         }
 
         float temperature_c =
-            read_temperature_c();
+            read_temperature_c(dev_handle);
 
         float distance_cm =
             calculate_distance_cm(
