@@ -25,8 +25,8 @@
 #include "esp_mac.h"
 
 /* Constants that aren't configurable in menuconfig */
-#define WEB_SERVER "wttr.in"
-#define WEB_PORT "80"
+#define WEB_SERVER "192.168.0.145"
+#define WEB_PORT "8000"
 #define WEB_PATH "/"
 
 static const char *TAG = "example";
