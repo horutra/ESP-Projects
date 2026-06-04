@@ -7,7 +7,7 @@
 
 // ── GPIO via sysfs ────────────────────────────────────────────────────────────
 // Change this to whichever BCM GPIO pin your LED is wired to.
-#define LED_GPIO "17"
+#define LED_GPIO "18"
 
 // ── Morse timing (microseconds) ───────────────────────────────────────────────
 // Standard Morse ratios:  dot=1  dash=3  intra-char gap=1  inter-char gap=3
