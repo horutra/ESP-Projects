@@ -40,21 +40,26 @@ static int morse_index(char c) {
 static void gpio_write(const char *path, const char *val) {
     int fd = open(path, O_WRONLY);
     if (fd < 0) { perror(path); exit(1); }
-    write(fd, val, strlen(val));
+    if (write(fd, val, strlen(val)) < 0) { perror(path); exit(1); }
     close(fd);
 }
 
-static void gpio_setup(void) {
-    // Export pin
+static void gpio_export_if_needed(void) {
+    // If the gpio directory already exists, it's already exported — skip
+    char path[64];
+    snprintf(path, sizeof(path), "/sys/class/gpio/gpio" LED_GPIO "/value");
+    if (access(path, F_OK) == 0) return;
+
     int fd = open("/sys/class/gpio/export", O_WRONLY);
-    if (fd >= 0) {          // ignore EBUSY (already exported)
-        write(fd, LED_GPIO, strlen(LED_GPIO));
-        close(fd);
-        usleep(100000);     // let the kernel create the files
-    }
-    // Set direction to output
+    if (fd < 0) { perror("open export"); exit(1); }
+    if (write(fd, LED_GPIO, strlen(LED_GPIO)) < 0) { perror("write export"); exit(1); }
+    close(fd);
+    usleep(100000);  // let the kernel create the files
+}
+
+static void gpio_setup(void) {
+    gpio_export_if_needed();
     gpio_write("/sys/class/gpio/gpio" LED_GPIO "/direction", "out");
-    // Start with LED off
     gpio_write("/sys/class/gpio/gpio" LED_GPIO "/value", "0");
 }
 
