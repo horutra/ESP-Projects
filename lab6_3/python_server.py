@@ -1,13 +1,10 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import requests
 
-SERVER_LOCATION = "San Francisco"
+SERVER_LOCATION = "Santa Cruz"
 class MyServer(BaseHTTPRequestHandler):
-  
 
     def do_GET(self):
-        print("DEBUG PATH =", repr(self.path))
-
 
         if self.path == "/location": 
             print("Location request received")
@@ -19,6 +16,8 @@ class MyServer(BaseHTTPRequestHandler):
 
             self.wfile.write(SERVER_LOCATION.encode())
             return
+
+
 
         print("GET request received")
         print("Path:", self.path)

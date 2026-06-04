@@ -43,9 +43,14 @@ static i2c_master_dev_handle_t dev_handle;
 /* Constants that aren't configurable in menuconfig */
 #define WEB_SERVER "10.0.0.45"
 #define WEB_PORT "8000"
-#define WEB_PATH "http://wttr.in/?format=3"
+#define WEB_PATH "/temperature"
+
+#define GET_LOCATION "/location"
 
 static const char *TAG = "example";
+
+
+
 
 static uint8_t crc8(const uint8_t *data, size_t len)
 {
@@ -129,6 +134,8 @@ float read_temperature(void)
     return temp;
 }
 
+
+
 static void http_get_task(void *pvParameters)
 {
 
@@ -140,15 +147,53 @@ static void http_get_task(void *pvParameters)
     struct in_addr *addr;
     int s, r;
     char recv_buf[64];
+    char response_buffer[512];
+    int response_index = 0;
+
+    char location[100]; 
+    char formatted_location[128];
+    char outdoor_temp[32];
+
 
     while(1) {
+        
+        response_index = 0;
+        memset(response_buffer, 0, sizeof(response_buffer)); 
+
+        char location_request[128];
+
+
+        snprintf(location_request,
+                sizeof(location_request),
+                "GET " GET_LOCATION " HTTP/1.0\r\n"
+                "Host: " WEB_SERVER ":" WEB_PORT "\r\n"
+                "\r\n");
+
+
 
         float temp = read_temperature();
-        char post_data[64];
-        snprintf(post_data, sizeof(post_data), "Temperature: %.2f C", temp);
+
+        
+        char wttr_request[256];
+
+        snprintf(
+            wttr_request,
+            sizeof(wttr_request),
+            "GET /%s?format=%%t HTTP/1.0\r\n"
+            "Host: wttr.in\r\n"
+            "\r\n",
+            formatted_location
+        );
+
+        printf("%s\n", wttr_request);
+
+
+        char post_data[256];
+        snprintf(post_data, sizeof(post_data), "Location =%s , Outdoor = %s°C, Indoor = %.2f°C",
+                location, outdoor_temp, temp);
         ESP_LOGI(TAG, "Posting temperature: %s", post_data);
 
-        char request[256];
+        char request[512];
             snprintf(request, sizeof(request),
                     "POST " WEB_PATH " HTTP/1.0\r\n"
                     "Host: "WEB_SERVER":"WEB_PORT"\r\n"
@@ -193,7 +238,9 @@ static void http_get_task(void *pvParameters)
         ESP_LOGI(TAG, "... connected");
         freeaddrinfo(res);
 
-        if (write(s, request, strlen(request)) < 0) {
+        ESP_LOGI(TAG, "Sending Location Request:\n%s", location_request);
+
+        if (write(s, location_request, strlen(location_request)) < 0) {
             ESP_LOGE(TAG, "... socket send failed");
             close(s);
             vTaskDelay(4000 / portTICK_PERIOD_MS);
@@ -219,8 +266,183 @@ static void http_get_task(void *pvParameters)
             r = read(s, recv_buf, sizeof(recv_buf)-1);
             for(int i = 0; i < r; i++) {
                 putchar(recv_buf[i]);
+
+                response_buffer[response_index] = recv_buf[i];
+                response_index++;
             }
         } while(r > 0);
+
+        response_buffer[response_index] = '\0';
+
+            char *body = strstr(response_buffer, "\r\n\r\n");
+
+            if(body != NULL)
+            {
+                body += 4;
+
+                snprintf(location,
+                        sizeof(location),
+                        "%s",
+                        body);
+
+                printf("\nLocation = %s\n", location);
+                int loc_index;
+
+                    for(loc_index = 0; loc_index < strlen(location); loc_index++)
+                    {
+                        if(location[loc_index] == ' ')
+                            formatted_location[loc_index] = '+';
+                        else
+                            formatted_location[loc_index] = location[loc_index];
+                    }
+
+                    formatted_location[loc_index] = '\0';
+                
+                printf("Formatted Location = %s\n",
+                    formatted_location);
+
+                snprintf(
+                    wttr_request,
+                    sizeof(wttr_request),
+                    "GET /%s?format=%%t HTTP/1.0\r\n"
+                    "Host: wttr.in\r\n"
+                    "\r\n",
+                    formatted_location
+                );
+
+            }
+
+                printf("Formatted Location = %s\n",
+                    formatted_location);
+
+    // ================= WTTR REQUEST =================
+
+                close(s);
+
+                response_index = 0;
+                memset(response_buffer, 0, sizeof(response_buffer));
+
+                int wttr_err = getaddrinfo("wttr.in", "80", &hints, &res);
+
+                if (wttr_err != 0 || res == NULL) {
+                    ESP_LOGE(TAG, "WTTR DNS lookup failed");
+                    continue;
+                }
+
+                s = socket(res->ai_family, res->ai_socktype, 0);
+
+                if (s < 0) {
+                    ESP_LOGE(TAG, "WTTR socket failed");
+                    freeaddrinfo(res);
+                    continue;
+                }
+
+                if (connect(s, res->ai_addr, res->ai_addrlen) != 0) {
+                    ESP_LOGE(TAG, "WTTR connect failed");
+                    close(s);
+                    freeaddrinfo(res);
+                    continue;
+                }
+
+                freeaddrinfo(res);
+
+                if (write(s, wttr_request, strlen(wttr_request)) < 0) {
+                    ESP_LOGE(TAG, "WTTR send failed");
+                    close(s);
+                    continue;
+                }
+
+                ESP_LOGI(TAG, "WTTR request sent");
+              response_index = 0;
+                memset(response_buffer, 0, sizeof(response_buffer));
+
+                do {
+                    bzero(recv_buf, sizeof(recv_buf));
+                    r = read(s, recv_buf, sizeof(recv_buf)-1);
+
+                    for(int i = 0; i < r; i++) {
+                        putchar(recv_buf[i]);
+
+                        response_buffer[response_index] = recv_buf[i];
+                        response_index++;
+                    }
+
+                } while(r > 0);
+
+                response_buffer[response_index] = '\0';
+
+                printf("\nWTTR RESPONSE:\n%s\n", response_buffer);
+                char *weather_body = strstr(response_buffer, "\r\n\r\n");
+
+                    if(weather_body != NULL)
+                    {
+                        weather_body += 4;
+
+                        snprintf(outdoor_temp,
+                                sizeof(outdoor_temp),
+                                "%s",
+                                weather_body);
+
+                        printf("Outdoor Temp = %s\n",
+                            outdoor_temp);
+                            
+                        snprintf(post_data,
+                        sizeof(post_data),
+                        "Location=%s, Outdoor=%s, Indoor=%.2fC",
+                        location,
+                        outdoor_temp,
+                        temp);
+
+                        ESP_LOGI(TAG, "Posting: %s", post_data);
+                        int post_err = getaddrinfo(WEB_SERVER, WEB_PORT, &hints, &res);
+
+                        if(post_err != 0 || res == NULL) {
+                            ESP_LOGE(TAG, "POST DNS failed");
+                            continue;
+                        }
+
+                        s = socket(res->ai_family, res->ai_socktype, 0);
+
+                        if(s < 0) {
+                            ESP_LOGE(TAG, "POST socket failed");
+                            freeaddrinfo(res);
+                            continue;
+                        }
+
+                        if(connect(s, res->ai_addr, res->ai_addrlen) != 0) {
+                            ESP_LOGE(TAG, "POST connect failed");
+                            close(s);
+                            freeaddrinfo(res);
+                            continue;
+                        }
+
+                        freeaddrinfo(res);
+
+                        char request[512];
+
+                        snprintf(request,
+                                sizeof(request),
+                                "POST /temperature HTTP/1.0\r\n"
+                                "Host: " WEB_SERVER ":" WEB_PORT "\r\n"
+                                "Content-Type: text/plain\r\n"
+                                "Content-Length: %d\r\n"
+                                "\r\n"
+                                "%s",
+                                strlen(post_data),
+                                post_data);
+
+                        if(write(s, request, strlen(request)) < 0)
+                        {
+                            ESP_LOGE(TAG, "POST send failed");
+                        }
+                        else
+                        {
+                            ESP_LOGI(TAG, "POST SENT!");
+                        }
+
+                        close(s);
+                                                
+                    }
 
         ESP_LOGI(TAG, "... done reading from socket. Last read return=%d errno=%d.", r, errno);
         close(s);
@@ -254,5 +476,5 @@ void app_main(void)
          mac[0], mac[1], mac[2],
          mac[3], mac[4], mac[5]);
 
-    xTaskCreate(&http_get_task, "http_get_task", 4096, NULL, 5, NULL);
+    xTaskCreate(&http_get_task, "http_get_task", 8192, NULL, 5, NULL);
 }
