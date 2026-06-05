@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "esp_timer.h"
 
 
 #include "esp_adc/adc_oneshot.h"
@@ -35,7 +34,7 @@ void app_main(void)
     int threshold = 50; 
     bool light_on = false; 
 
-    int64_t start_time = 0;
+    TickType_t start_tick = 0;
     
     while(1) {
         int adc_raw = 0; 
@@ -49,19 +48,21 @@ void app_main(void)
 
                 if (light_on)
                 {
-                    start_time = esp_timer_get_time();
+                    start_tick = xTaskGetTickCount();
 
                     ESP_LOGI(TAG, "LIGHT ON");
                 }
                 else
                 {
-                    int64_t duration =
-                        (esp_timer_get_time() - start_time) / 1000;
+                   TickType_t end_tick = xTaskGetTickCount();
 
-                    ESP_LOGI(TAG, "LIGHT OFF, duration = %lld ms", duration);
+                 uint32_t duration_ms =
+                         (end_tick - start_tick) * portTICK_PERIOD_MS;
+
+                    ESP_LOGI(TAG, "LIGHT OFF, duration = %lld ms", (unsigned long)duration_ms);
                 }
             }
          vTaskDelay(pdMS_TO_TICKS(1000));
     }
-    }
+}
 
