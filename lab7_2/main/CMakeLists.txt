@@ -1,3 +1,3 @@
-idf_component_register(SRCS "oneshot_read_main.c"
+idf_component_register(SRCS "test.c"
                     PRIV_REQUIRES esp_adc
                     INCLUDE_DIRS ".")
