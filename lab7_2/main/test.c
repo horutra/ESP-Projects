@@ -2,12 +2,13 @@
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "esp_timer.h"
+
 
 #include "esp_adc/adc_oneshot.h"
 #include "esp_log.h"
 
 static const char *TAG = "MORSE_RX";
-
 void app_main(void)
 {
     adc_oneshot_unit_handle_t adc_handle;
@@ -33,6 +34,8 @@ void app_main(void)
 
     int threshold = 50; 
     bool light_on = false; 
+
+    int64_t start_time = 0;
     
     while(1) {
         int adc_raw = 0; 
@@ -40,13 +43,25 @@ void app_main(void)
             adc_oneshot_read(adc_handle, ADC_CHANNEL_1, &adc_raw));
         bool new_light_on = (adc_raw > threshold);
 
-        if (new_light_on != light_on) {
-            light_on = new_light_on;
-            ESP_LOGI(TAG, "Light is now %s (raw: %d)", light_on ? "ON" : "OFF", adc_raw);
-        }else {
-            ESP_LOGI(TAG, "Light state unchanged: %s (raw: %d)", light_on ? "ON" : "OFF", adc_raw);
-        }
+        if (new_light_on != light_on)
+            {
+                light_on = new_light_on;
+
+                if (light_on)
+                {
+                    start_time = esp_timer_get_time();
+
+                    ESP_LOGI(TAG, "LIGHT ON");
+                }
+                else
+                {
+                    int64_t duration =
+                        (esp_timer_get_time() - start_time) / 1000;
+
+                    ESP_LOGI(TAG, "LIGHT OFF, duration = %lld ms", duration);
+                }
+            }
+         vTaskDelay(pdMS_TO_TICKS(1000));
     }
-    vTaskDelay(pdMS_TO_TICKS(1000));
     }
 
