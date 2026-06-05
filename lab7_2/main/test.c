@@ -49,6 +49,4 @@ void app_main(void)
     }
     vTaskDelay(pdMS_TO_TICKS(1000));
     }
-   
-}
 
