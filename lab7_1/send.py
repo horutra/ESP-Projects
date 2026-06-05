@@ -55,4 +55,4 @@ message = sys.argv[2]
 
 for _ in range(count):
     send_message(message)
-    sleep(1)}
+    sleep(1)
