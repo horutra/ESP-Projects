@@ -47,7 +47,7 @@ void app_main(void)
             ESP_LOGI(TAG, "Light state unchanged: %s (raw: %d)", light_on ? "ON" : "OFF", adc_raw);
         }
     }
-    vtaskDelay(pdMS_TO_TICKS(1000));
+    vTaskDelay(pdMS_TO_TICKS(1000));
     }
    
 }
