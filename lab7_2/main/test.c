@@ -31,19 +31,24 @@ void app_main(void)
             ADC_CHANNEL_1,
             &config));
 
-    while (1)
-    {
-        int adc_raw = 0;
-
+    int threshold = 50; 
+    bool light_on = false; 
+    
+    while(1) {
+        int adc_raw = 0; 
         ESP_ERROR_CHECK(
-            adc_oneshot_read(
-                adc_handle,
-                ADC_CHANNEL_1,
-                &adc_raw));
+            adc_oneshot_read(adc_handle, ADC_CHANNEL_1, &adc_raw));
+        bool new_light_on = (adc_raw > threshold);
 
-        printf("ADC: %d\n", adc_raw);
-
-        vTaskDelay(pdMS_TO_TICKS(100));
+        if (new_light_on != light_on) {
+            light_on = new_light_on;
+            ESP_LOGI(TAG, "Light is now %s (raw: %d)", light_on ? "ON" : "OFF", adc_raw);
+        }else {
+            ESP_LOGI(TAG, "Light state unchanged: %s (raw: %d)", light_on ? "ON" : "OFF", adc_raw);
+        }
     }
+    vtaskDelay(pdMS_TO_TICKS(1000));
+    }
+   
 }
 
