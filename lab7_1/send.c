@@ -1,145 +1,134 @@
+```c
+#include <gpiod.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 #include <unistd.h>
-#include <fcntl.h>
+#include <ctype.h>
 
-// ── GPIO via sysfs ────────────────────────────────────────────────────────────
-// Change this to whichever BCM GPIO pin your LED is wired to.
-#define LED_GPIO "24"
+#define CHIPNAME "gpiochip0"
+#define GPIO_LINE 18
 
-// ── Morse timing (microseconds) ───────────────────────────────────────────────
-// Standard Morse ratios:  dot=1  dash=3  intra-char gap=1  inter-char gap=3
-// inter-word gap=7  (all multiples of DOT_US)
-#define DOT_US       200000   // 0.2 s  → ~1 char/s at lab-default speed
-#define DASH_US      (DOT_US * 3)
-#define INTRA_US     DOT_US          // gap between dots/dashes in same letter
-#define INTER_US     (DOT_US * 3)    // gap between letters
-#define WORD_US      (DOT_US * 7)    // gap between words
+#define DOT_TIME 100000      // 100 ms
+#define DASH_TIME 300000     // 300 ms
+#define SYMBOL_GAP 100000
+#define LETTER_GAP 300000
+#define WORD_GAP 700000
 
-// ── Morse table (A-Z, 0-9) ────────────────────────────────────────────────────
-static const char *MORSE[] = {
-    // A-Z
-    ".-",   "-...", "-.-.", "-..",  ".",    "..-.", "--.",  "....",
-    "..",   ".---", "-.-",  ".-..", "--",   "-.",   "---",  ".--.",
-    "--.-", ".-.",  "...",  "-",    "..-",  "...-", ".--",  "-..-",
-    "-.--", "--..",
-    // 0-9
-    "-----",".-","..---","...--","....-",".....","-....","--...","---..","----."
+struct Morse {
+    char c;
+    const char *code;
 };
-// Index helpers
-static int morse_index(char c) {
-    if (c >= 'a' && c <= 'z') return c - 'a';
-    if (c >= 'A' && c <= 'Z') return c - 'A';
-    if (c >= '0' && c <= '9') return 26 + (c - '0');
-    return -1;
-}
 
-// ── GPIO helpers ──────────────────────────────────────────────────────────────
-static void gpio_write(const char *path, const char *val) {
-    int fd = open(path, O_WRONLY);
-    if (fd < 0) { perror(path); exit(1); }
-    if (write(fd, val, strlen(val)) < 0) { perror(path); exit(1); }
-    close(fd);
-}
+struct Morse morseTable[] = {
+    {'A', ".-"},    {'B', "-..."}, {'C', "-.-."},
+    {'D', "-.."},   {'E', "."},    {'F', "..-."},
+    {'G', "--."},   {'H', "...."}, {'I', ".."},
+    {'J', ".---"},  {'K', "-.-"},  {'L', ".-.."},
+    {'M', "--"},    {'N', "-."},   {'O', "---"},
+    {'P', ".--."},  {'Q', "--.-"}, {'R', ".-."},
+    {'S', "..."},   {'T', "-"},    {'U', "..-"},
+    {'V', "...-"},  {'W', ".--"},  {'X', "-..-"},
+    {'Y', "-.--"},  {'Z', "--.."},
 
-static void gpio_export_if_needed(void) {
-    // If the gpio directory already exists, it's already exported — skip
-    char path[64];
-    snprintf(path, sizeof(path), "/sys/class/gpio/gpio" LED_GPIO "/value");
-    if (access(path, F_OK) == 0) return;
+    {'0', "-----"}, {'1', ".----"}, {'2', "..---"},
+    {'3', "...--"}, {'4', "....-"}, {'5', "....."},
+    {'6', "-...."}, {'7', "--..."}, {'8', "---.."},
+    {'9', "----."}
+};
 
-    int fd = open("/sys/class/gpio/export", O_WRONLY);
-    if (fd < 0) { perror("open export"); exit(1); }
-    if (write(fd, LED_GPIO, strlen(LED_GPIO)) < 0) { perror("write export"); exit(1); }
-    close(fd);
-    usleep(100000);  // let the kernel create the files
-}
+const char* getMorse(char c)
+{
+    c = toupper(c);
 
-static void gpio_setup(void) {
-    gpio_export_if_needed();
-    gpio_write("/sys/class/gpio/gpio" LED_GPIO "/direction", "out");
-    gpio_write("/sys/class/gpio/gpio" LED_GPIO "/value", "0");
-}
-
-static void led_on(void)  { gpio_write("/sys/class/gpio/gpio" LED_GPIO "/value", "1"); }
-static void led_off(void) { gpio_write("/sys/class/gpio/gpio" LED_GPIO "/value", "0"); }
-
-// ── Morse sending ─────────────────────────────────────────────────────────────
-static void send_symbol(char sym) {
-    led_on();
-    usleep(sym == '.' ? DOT_US : DASH_US);
-    led_off();
-}
-
-static void send_char(char c) {
-    int idx = morse_index(c);
-    if (idx < 0) return;            // unsupported character – skip silently
-    const char *seq = MORSE[idx];
-    for (int i = 0; seq[i]; i++) {
-        send_symbol(seq[i]);
-        if (seq[i + 1]) usleep(INTRA_US);   // gap between symbols
+    for (unsigned int i = 0; i < sizeof(morseTable)/sizeof(morseTable[0]); i++)
+    {
+        if (morseTable[i].c == c)
+            return morseTable[i].code;
     }
+
+    return NULL;
 }
 
-static void send_message(const char *msg) {
-    int first_char = 1;
-    for (int i = 0; msg[i]; i++) {
-        char c = msg[i];
-        if (c == ' ') {
-            usleep(WORD_US);
-            first_char = 1;
-        } else {
-            if (!first_char) usleep(INTER_US);
-            send_char(c);
-            first_char = 0;
+void led_on(struct gpiod_line *line)
+{
+    gpiod_line_set_value(line, 1);
+}
+
+void led_off(struct gpiod_line *line)
+{
+    gpiod_line_set_value(line, 0);
+}
+
+void sendSymbol(struct gpiod_line *line, char symbol)
+{
+    led_on(line);
+
+    if (symbol == '.')
+        usleep(DOT_TIME);
+    else
+        usleep(DASH_TIME);
+
+    led_off(line);
+    usleep(SYMBOL_GAP);
+}
+
+void sendMessage(struct gpiod_line *line, const char *msg)
+{
+    while (*msg)
+    {
+        if (*msg == ' ')
+        {
+            usleep(WORD_GAP);
         }
-    }
-}
+        else
+        {
+            const char *code = getMorse(*msg);
 
-// ── Morse pretty-print (mirrors the lab example output) ──────────────────────
-static void print_morse(const char *msg) {
-    int first = 1;
-    for (int i = 0; msg[i]; i++) {
-        char c = msg[i];
-        if (c == ' ') {
-            printf(" /");
-            first = 1;
-        } else {
-            int idx = morse_index(c);
-            if (idx < 0) continue;
-            if (!first) printf(" ");
-            printf("%s", MORSE[idx]);
-            first = 0;
+            if (code)
+            {
+                while (*code)
+                {
+                    sendSymbol(line, *code);
+                    code++;
+                }
+
+                usleep(LETTER_GAP);
+            }
         }
+
+        msg++;
     }
-    printf("\n");
 }
 
-// ── main ──────────────────────────────────────────────────────────────────────
-int main(int argc, char *argv[]) {
-    if (argc != 3) {
-        fprintf(stderr, "Usage: %s <count> \"<message>\"\n", argv[0]);
-        fprintf(stderr, "  e.g: %s 4 \"hello ESP32\"\n", argv[0]);
+int main(int argc, char *argv[])
+{
+    if (argc != 3)
+    {
+        printf("Usage: %s <count> \"message\"\n", argv[0]);
         return 1;
     }
 
     int count = atoi(argv[1]);
-    if (count <= 0) {
-        fprintf(stderr, "Error: count must be a positive integer.\n");
-        return 1;
+    char *message = argv[2];
+
+    struct gpiod_chip *chip;
+    struct gpiod_line *line;
+
+    chip = gpiod_chip_open_by_name(CHIPNAME);
+    line = gpiod_chip_get_line(chip, GPIO_LINE);
+
+    gpiod_line_request_output(line, "morse", 0);
+
+    for (int i = 0; i < count; i++)
+    {
+        sendMessage(line, message);
+        usleep(1000000);
     }
-    const char *msg = argv[2];
 
-    gpio_setup();
+    gpiod_line_release(line);
+    gpiod_chip_close(chip);
 
-    for (int i = 0; i < count; i++) {
-        print_morse(msg);
-        send_message(msg);
-        if (i + 1 < count) usleep(WORD_US * 2);  // pause between repetitions
-    }
-
-    led_off();
     return 0;
 }
+```
