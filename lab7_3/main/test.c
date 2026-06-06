@@ -15,6 +15,9 @@ void app_main(void)
     int message_index = 0;
     bool word_gap_added = false;
     adc_oneshot_unit_handle_t adc_handle;
+    int total_characters = 0;
+TickType_t first_character_tick = 0;
+bool timer_started = false;
 
     adc_oneshot_unit_init_cfg_t init_config = {
         .unit_id = ADC_UNIT_1,
@@ -120,12 +123,12 @@ char decode_morse(const char *morse)
 
                     ESP_LOGI(TAG, "duration=%lu ms",
                             (unsigned long)duration_ms);
-                    if (duration_ms < 200)
+                    if (duration_ms < 20)
                     {
                         ESP_LOGI(TAG, "Ignoring noise pulse");
                         continue;
                     }
-                    if (duration_ms < 1500)
+                    if (duration_ms < 150)
                         {
                             morse_buffer[morse_index++] = '.';
                             last_symbol_tick = xTaskGetTickCount();
@@ -149,12 +152,38 @@ char decode_morse(const char *morse)
                 TickType_t now = xTaskGetTickCount();
                 if (!light_on &&
                     morse_index > 0 &&
-                    ((now - last_symbol_tick) * portTICK_PERIOD_MS) > 1940)
+                    ((now - last_symbol_tick) * portTICK_PERIOD_MS) > 400)
                 {
                     char letter = decode_morse(morse_buffer);
 
+                    if (!timer_started)
+                    {
+                        first_character_tick = xTaskGetTickCount();
+                        timer_started = true;
+                    }
+
                     message[message_index++] = letter;
                     message[message_index] = '\0';
+
+                    total_characters++;
+
+                    ESP_LOGI(TAG,
+                            "MESSAGE = %s",
+                            message);
+
+                    if (timer_started && total_characters > 1)
+                        {
+                            float elapsed_seconds =
+                                (xTaskGetTickCount() - first_character_tick)
+                                * portTICK_PERIOD_MS / 1000.0f;
+
+                            float chars_per_second = total_characters / elapsed_seconds;
+
+                            ESP_LOGI(TAG,
+                                    "Total Chars = %d | Speed = %.2f chars/sec",
+                                    total_characters,
+                                    chars_per_second);
+                        }
 
                     ESP_LOGI(TAG,
                             "LETTER = %c",
@@ -169,7 +198,7 @@ char decode_morse(const char *morse)
                 }
                 if (!light_on && message_index > 0 &&
                         !word_gap_added &&
-                        ((now - last_symbol_tick) * portTICK_PERIOD_MS) > 3500)
+                        ((now - last_symbol_tick) * portTICK_PERIOD_MS) > 1000)
                     {
                         if (message_index < sizeof(message) - 1)
                         {
@@ -190,12 +219,14 @@ char decode_morse(const char *morse)
                     message[0] = '\0';
 
                     word_gap_added = false;
+                    total_characters = 0;
+                    timer_started = false;
 
                     ESP_LOGI(TAG, "Message buffer cleared");
                 }
                 
 
-         vTaskDelay(pdMS_TO_TICKS(50));
+         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
 

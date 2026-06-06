@@ -20,8 +20,8 @@ MORSE = {
     '9': '----.'
 }
 
-DOT = .5
-DASH = 1.5
+DOT = .25
+DASH = .75
 
 def send_symbol(symbol):
     led.on()
@@ -44,7 +44,7 @@ def send_message(msg):
             for symbol in MORSE[ch]:
                 send_symbol(symbol)
 
-            sleep(2.0)
+            sleep(1)
 
 if len(sys.argv) != 3:
     print("Usage: python3 send.py <count> \"message\"")

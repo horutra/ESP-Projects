@@ -61,7 +61,7 @@ static void ultrasonic_gpio_init(void)
 
 static void ultrasonic_trigger(void)
 {
-   
+    ESP_LOGI(TAG, "Sending trigger pulse");
     gpio_set_level(TRIG_PIN, 0);
     ets_delay_us(2);
 
